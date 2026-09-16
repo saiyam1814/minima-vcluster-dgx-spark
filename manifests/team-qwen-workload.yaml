@@ -1,0 +1,57 @@
+# Applied INSIDE team-qwen's tenant cluster, not on the control plane cluster.
+# There is no namespace field: this object lands in team-qwen's own cluster,
+# which is the whole point. The team sees a Kubernetes API that contains only
+# their own objects.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ask-qwen
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ask-qwen
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      containers:
+        - name: client
+          image: curlimages/curl:8.12.1
+          env:
+            # The Minima router runs on the Spark host, outside Kubernetes.
+            # status.hostIP resolves to the node the synced pod actually runs on.
+            # VERIFY during the run: confirm this is populated inside a tenant
+            # cluster and equals the Spark's LAN address.
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          command: ["/bin/sh", "-ec"]
+          args:
+            - |
+              curl --fail-with-body -sS --connect-timeout 10 --max-time 180 \
+                "http://${HOST_IP}:8000/v1/chat/completions" \
+                -H 'Content-Type: application/json' \
+                -d '{
+                  "model": "qwen3.6-27b",
+                  "messages": [{
+                    "role": "user",
+                    "content": "Reply with exactly: hello from team-qwen"
+                  }],
+                  "temperature": 0,
+                  "max_tokens": 32,
+                  "chat_template_kwargs": {"enable_thinking": false}
+                }'
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            # curlimages/curl declares the named user `curl_user`; Kubernetes
+            # needs its numeric identity to enforce runAsNonRoot.
+            runAsUser: 101
+            runAsGroup: 102
+            seccompProfile:
+              type: RuntimeDefault

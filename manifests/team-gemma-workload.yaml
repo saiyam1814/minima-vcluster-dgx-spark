@@ -1,0 +1,50 @@
+# Applied INSIDE team-gemma's tenant cluster, not on the control plane cluster.
+# Identical shape to team-qwen's workload except for the model it calls. That
+# symmetry is the point: two teams, two separate Kubernetes APIs, one shared
+# model endpoint on the host.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ask-gemma
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ask-gemma
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      containers:
+        - name: client
+          image: curlimages/curl:8.12.1
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          command: ["/bin/sh", "-ec"]
+          args:
+            - |
+              curl --fail-with-body -sS --connect-timeout 10 --max-time 180 \
+                "http://${HOST_IP}:8000/v1/chat/completions" \
+                -H 'Content-Type: application/json' \
+                -d '{
+                  "model": "gemma4-31b-it",
+                  "messages": [{
+                    "role": "user",
+                    "content": "Reply with exactly: hello from team-gemma"
+                  }],
+                  "temperature": 0,
+                  "max_tokens": 32
+                }'
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            runAsUser: 101
+            runAsGroup: 102
+            seccompProfile:
+              type: RuntimeDefault

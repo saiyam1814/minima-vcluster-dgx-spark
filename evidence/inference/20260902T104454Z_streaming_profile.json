@@ -1,0 +1,60 @@
+{
+  "observed_at_utc": "2026-09-02T10:44:54.305458+00:00",
+  "test": "client-observed Minima streaming inference profile",
+  "endpoint": "redacted-private-spark-endpoint",
+  "method": {
+    "client_path": "Saiyam's Mac over private Tailscale",
+    "streaming": true,
+    "temperature": 0,
+    "max_tokens": 128,
+    "prompt_tokens": {"qwen3.6-27b": 56, "gemma4-31b-it": 55},
+    "warmup_requests_per_model": 1,
+    "serial_runs_per_model": 5,
+    "concurrent_batches_per_model": 3,
+    "requests_per_concurrent_batch": 4,
+    "decode_rate_formula": "(completion_tokens - 1) / (last_content_byte_time - first_content_byte_time)",
+    "warning": "This profiles Minima only; it is not a comparison against reference vLLM."
+  },
+  "models": {
+    "qwen3.6-27b": {
+      "serial_runs": [
+        {"ttft_seconds": 0.1823, "decode_tokens_per_second": 24.63, "end_to_end_tokens_per_second": 23.98, "total_seconds": 5.3383},
+        {"ttft_seconds": 0.1241, "decode_tokens_per_second": 24.53, "end_to_end_tokens_per_second": 24.14, "total_seconds": 5.3018},
+        {"ttft_seconds": 0.1242, "decode_tokens_per_second": 24.27, "end_to_end_tokens_per_second": 23.90, "total_seconds": 5.3567},
+        {"ttft_seconds": 0.1173, "decode_tokens_per_second": 24.46, "end_to_end_tokens_per_second": 24.11, "total_seconds": 5.3087},
+        {"ttft_seconds": 0.1138, "decode_tokens_per_second": 24.49, "end_to_end_tokens_per_second": 24.15, "total_seconds": 5.2993}
+      ],
+      "serial_median": {
+        "ttft_seconds": 0.124,
+        "decode_tokens_per_second": 24.49,
+        "end_to_end_tokens_per_second": 24.11,
+        "total_seconds": 5.309
+      },
+      "concurrent_batches": [
+        {"successful_requests": 4, "output_tokens": 512, "wall_seconds": 10.3018, "aggregate_output_tokens_per_second": 49.70},
+        {"successful_requests": 4, "output_tokens": 512, "wall_seconds": 6.0689, "aggregate_output_tokens_per_second": 84.36},
+        {"successful_requests": 4, "output_tokens": 512, "wall_seconds": 6.1198, "aggregate_output_tokens_per_second": 83.66}
+      ]
+    },
+    "gemma4-31b-it": {
+      "serial_runs": [
+        {"ttft_seconds": 0.3054, "decode_tokens_per_second": 18.62, "end_to_end_tokens_per_second": 17.96, "total_seconds": 7.1274},
+        {"ttft_seconds": 0.2850, "decode_tokens_per_second": 18.56, "end_to_end_tokens_per_second": 17.96, "total_seconds": 7.1261},
+        {"ttft_seconds": 0.2859, "decode_tokens_per_second": 18.56, "end_to_end_tokens_per_second": 17.95, "total_seconds": 7.1315},
+        {"ttft_seconds": 0.2886, "decode_tokens_per_second": 18.32, "end_to_end_tokens_per_second": 17.73, "total_seconds": 7.2204},
+        {"ttft_seconds": 0.2872, "decode_tokens_per_second": 18.51, "end_to_end_tokens_per_second": 17.91, "total_seconds": 7.1477}
+      ],
+      "serial_median": {
+        "ttft_seconds": 0.287,
+        "decode_tokens_per_second": 18.56,
+        "end_to_end_tokens_per_second": 17.95,
+        "total_seconds": 7.131
+      },
+      "concurrent_batches": [
+        {"successful_requests": 4, "output_tokens": 512, "wall_seconds": 9.3069, "aggregate_output_tokens_per_second": 55.01},
+        {"successful_requests": 4, "output_tokens": 512, "wall_seconds": 9.2173, "aggregate_output_tokens_per_second": 55.55},
+        {"successful_requests": 4, "output_tokens": 512, "wall_seconds": 9.3063, "aggregate_output_tokens_per_second": 55.02}
+      ]
+    }
+  }
+}

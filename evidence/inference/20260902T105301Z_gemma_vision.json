@@ -1,0 +1,13 @@
+{
+  "observed_at_utc": "2026-09-02T10:53:01Z",
+  "test": "Gemma vision smoke test against the article architecture diagram",
+  "model": "gemma4-31b-it",
+  "image": "diagrams/04-two-models-one-spark.png",
+  "elapsed_seconds": 5.572,
+  "usage": {
+    "prompt_tokens": 296,
+    "completion_tokens": 127,
+    "total_tokens": 423
+  },
+  "answer": "The architecture features a single API surface acting as a Model Router (port 8000) that directs client requests to one of two co-resident model backends. The router selects the optimized backend based on the request.model parameter. The two model backends are Qwen 3.6 27B (port 8867) and Gemma 4 31B (port 8868). Clients interact via a single endpoint using OpenAI-compatible calls for text, vision, and tool use."
+}

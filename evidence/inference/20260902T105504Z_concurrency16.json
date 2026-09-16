@@ -1,0 +1,33 @@
+{
+  "observed_at_utc": "2026-09-02T10:55:04.764185+00:00",
+  "test": "client-observed Minima streaming inference at concurrency 16",
+  "endpoint": "redacted-private-spark-endpoint",
+  "method": {
+    "client_path": "Saiyam's Mac over private Tailscale",
+    "streaming": true,
+    "temperature": 0,
+    "max_tokens": 128,
+    "concurrency": 16,
+    "batches_per_model": 3,
+    "output_tokens_per_batch": 2048,
+    "warning": "Minima-only throughput profile; not a reference-vLLM comparison."
+  },
+  "models": {
+    "qwen3.6-27b": {
+      "batches": [
+        {"successful_requests": 16, "wall_seconds": 8.8899, "aggregate_output_tokens_per_second": 230.37},
+        {"successful_requests": 16, "wall_seconds": 8.6529, "aggregate_output_tokens_per_second": 236.68},
+        {"successful_requests": 16, "wall_seconds": 8.6590, "aggregate_output_tokens_per_second": 236.52}
+      ],
+      "median_aggregate_output_tokens_per_second": 236.52
+    },
+    "gemma4-31b-it": {
+      "batches": [
+        {"successful_requests": 16, "wall_seconds": 27.1592, "aggregate_output_tokens_per_second": 75.41},
+        {"successful_requests": 16, "wall_seconds": 27.0099, "aggregate_output_tokens_per_second": 75.82},
+        {"successful_requests": 16, "wall_seconds": 27.0125, "aggregate_output_tokens_per_second": 75.82}
+      ],
+      "median_aggregate_output_tokens_per_second": 75.82
+    }
+  }
+}

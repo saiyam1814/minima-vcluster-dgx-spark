@@ -1,0 +1,31 @@
+controlPlane:
+  standalone:
+    # The Spark is multi-homed (LAN + Tailscale). Advertise the LAN address
+    # that is reachable both from the Pod network and the operator's Mac.
+    advertiseAddress: <SPARK_LAN_IP>
+    joinNode:
+      enabled: true
+      # Preserve the containerd installation already used by Docker on the
+      # Spark; its CRI v1 plugins are healthy and kubelet can share the socket.
+      containerd:
+        enabled: false
+      # The Standalone join script resets the node before kubeadm joins it,
+      # which stops an existing containerd even when management is disabled.
+      # Bring the preserved runtime back before the kubeadm join phase.
+      preJoinCommands:
+        - systemctl start containerd
+      nodeRegistration:
+        criSocket: unix:///run/containerd/containerd.sock
+  distro:
+    k8s:
+      image:
+        tag: v1.36.0
+privateNodes:
+  enabled: true
+  kubelet:
+    config:
+      # Keep host swap available to the memory-heavy Minima services while
+      # preventing Kubernetes Pods from consuming swap.
+      failSwapOn: false
+      memorySwap:
+        swapBehavior: NoSwap
