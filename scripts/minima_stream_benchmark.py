@@ -211,7 +211,9 @@ def main() -> int:
             "concurrency": args.concurrency,
             "concurrent_batches": args.concurrent_batches,
             "decode_rate_formula": "(completion_tokens - 1) / (last_content_byte_time - first_content_byte_time)",
-            "ttft_scope": "client-observed request start to first non-empty content event over private Tailscale",
+            "ttft_scope": "client-observed request start to first non-empty content event",
+            "client_path": ("loopback on the model host" if "127.0.0.1" in args.base_url or "localhost" in args.base_url
+                            else "remote client over the network path in --base-url"),
             "warning": "This profiles Minima only; it is not a comparison against reference vLLM.",
         },
         "models": {},
