@@ -14,14 +14,12 @@ Everything here was run on the actual machine. Every number in the article trace
 | `runbooks/05-two-tenant-clusters-demo.md` | Creating one tenant cluster per team on that Standalone instance |
 | `manifests/vcluster-standalone.yaml` | The tested Standalone configuration |
 | `manifests/team-qwen-workload.yaml`, `manifests/team-gemma-workload.yaml` | Each team's workload, applied **inside** that team's own tenant cluster |
-| `manifests/team-model-jobs.yaml` | The earlier namespace-scoped version, kept for reference only |
 | `scripts/minima_stream_benchmark.py` | The streaming benchmark behind the article's tables |
 | `scripts/dual_model_smoke.py`, `mixed_model_benchmark.py`, `gemma_vision_smoke.py` | Smoke tests and contention profile |
 | `demo-curls.md` | Sanitized text, vision, and reasoning requests, pure curl |
-| `evidence/platform/` | Captured command output from both runs |
+| `evidence/platform/` | Captured command output from the run |
 | `evidence/inference/` | Raw per-request JSON behind the performance tables |
 | `diagrams/` | Article diagrams as SVG and PNG |
-| `minima/DEPLOYMENT-BY-MINIMA.md` | Partner-owned section, pending Minima's review |
 
 ## Quick start
 
